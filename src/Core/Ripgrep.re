@@ -94,7 +94,8 @@ module RipgrepProcessingJob = {
 
 let process = (rgPath, mapItems, args, callback, completedCallback) => {
   incr(_ripGrepRunCount);
-  let argsStr = String.concat("|", Array.to_list(args));
+  let withHiddenFlag = Array.append([|"--hidden"|], args);
+  let argsStr = String.concat("|", Array.to_list(withHiddenFlag));
   Log.info(
     "[Ripgrep] Starting process: "
     ++ rgPath
@@ -123,7 +124,7 @@ let process = (rgPath, mapItems, args, callback, completedCallback) => {
       )
   );
 
-  let cp = ChildProcess.spawn(rgPath, args);
+  let cp = ChildProcess.spawn(rgPath, withHiddenFlag);
 
   let dispose1 =
     Event.subscribe(
